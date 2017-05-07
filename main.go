@@ -74,20 +74,20 @@ func perFileProcess(index int, filename string) (string, error) {
 
 	sb := make([]byte, 0)
 
-	xSize := source.Bounds().Size().X;
-	ySize := source.Bounds().Size().Y;
+	xSize := source.Bounds().Size().X
+	ySize := source.Bounds().Size().Y
 	if index == 0 {
 		sb = append(sb, fmt.Sprintf("%d, %d,\n", xSize, ySize)...)
 	}
 	sb = append(sb, fmt.Sprintf("// %d: %s\n", index, filename)...)
 
-	yLimit := (ySize + (8 - 1)) / 8;
+	yLimit := (ySize + (8 - 1)) / 8
 	for yCount := 0; yCount < yLimit; yCount++ {
 		yRange := int(math.Min(float64(ySize - (yCount * 8)), 8))
 		var count = 0
-		for x := xSize - 1; x >= 0; x-- {
-			var hex = 0;
-			var bit = 0x01;
+		for x := 0; x < xSize; x++ {
+			hex := 0
+			bit := 0x01
 			for y := 0; y < yRange; y++ {
 				pixel := source.At(x, y + (yCount * 8))
 				r, g, b, a := pixel.RGBA()
@@ -101,6 +101,7 @@ func perFileProcess(index int, filename string) (string, error) {
 				}
 				bit <<= 1
 			}
+			bit <<= uint32(8 - yRange)
 			sb = append(sb, fmt.Sprintf("0x%02x,", hex)...)
 			count++
 			if (count % 8) == 0 {
