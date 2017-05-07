@@ -1,0 +1,5 @@
+---
+spriteName: sample_sprites
+images:
+  - fileName: t.png
+  - fileName: f.png
